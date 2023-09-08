@@ -1,7 +1,7 @@
 object App: TApp
-  Left = 2408
+  Left = 2002
   Height = 595
-  Top = -742
+  Top = -715
   Width = 731
   Caption = 'App'
   ClientHeight = 595
@@ -43,11 +43,17 @@ object App: TApp
         Height = 488
         Top = 40
         Width = 707
-        Lines.Strings = (
-          'Memo'
-        )
         ScrollBars = ssAutoBoth
         TabOrder = 2
+      end
+      object LoagConfig: TButton
+        Left = 232
+        Height = 25
+        Top = 8
+        Width = 88
+        Caption = 'Loag Config'
+        OnClick = LoagConfigClick
+        TabOrder = 3
       end
     end
   end

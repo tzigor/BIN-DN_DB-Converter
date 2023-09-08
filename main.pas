@@ -14,6 +14,7 @@ type
   { TApp }
 
   TApp = class(TForm)
+    LoagConfig: TButton;
     Memo: TMemo;
     OpenBin: TButton;
     CloseApp: TButton;
@@ -21,6 +22,7 @@ type
     PageControl: TPageControl;
     MainPage: TTabSheet;
     procedure CloseAppClick(Sender: TObject);
+    procedure LoagConfigClick(Sender: TObject);
     procedure OpenBinClick(Sender: TObject);
   private
 
@@ -28,23 +30,52 @@ type
 
   end;
 
-Const NewLine = #13#10;
-      Tab = #09;
-      MIN_FILE_LENGTH = 100;
-      NoDateTimeCmd: TBytes = (22, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 112, 114);
-      DateSeparator = '-';
-      TimeSeparator = ':';
+Const
+  NewLine = #13#10;
+  Tab = #09;
+  MIN_FILE_LENGTH = 100;
+  NoDateTimeCmd: TBytes = (22, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 112, 114);
+  DateSeparator = '-';
+  TimeSeparator = ':';
+  ConfigSeparator = ';';
+  ConfigParamSeparator = '=';
 
-type TCurrentRecord = record
-       Addr: Byte;
-       Cmd: Byte;
-       N: Byte;
-       Data: TBytes;
-       Crc: Byte;
-     end;
+type
+  String32 = String[32];
+  String8 = String[8];
+  String2 = String[2];
+
+  TCurrentRecord = record
+    Addr: Byte;
+    Cmd: Byte;
+    N: Byte;
+    Data: TBytes;
+    Crc: Byte;
+  end;
+
+  TConfigParam = record
+    Param: String32;
+    Value: String8;
+  end;
+
+  TCongifData = record
+    Name: String32;
+    DataType: String2;
+  end;
+
+  TConfig = record
+    Addr: Byte;
+    Cmd: Byte;
+    N: Byte;
+    hasDateTime: Boolean;
+    hasVersion: Boolean;
+    Version: Byte;
+    Data: array of TCongifData;
+  end;
 
 var
   App: TApp;
+  ConfigList: TStringList;
   Bytes: TBytes;
   BinDbData: TBytes;
   currentFileSize: LongWord;
@@ -131,8 +162,6 @@ begin
   Result:= CurrentRecord;
 end;
 
-
-
 function GetDateTimeStr(CurrentRecord: TCurrentRecord): TDateTime;
 begin
   with CurrentRecord do begin
@@ -140,7 +169,6 @@ begin
        Result:= EncodeDateTime(StrToInt(IntToHex(Data[0])), StrToInt(IntToHex(Data[1])), StrToInt(IntToHex(Data[2])),
                       StrToInt(IntToHex(Data[3])), StrToInt(IntToHex(Data[4])), StrToInt(IntToHex(Data[5])), 0);
   end;
-  IntToHex(Data[3], 2) + TimeSeparator + IntToHex(Data[4], 2) + TimeSeparator + IntToHex(Data[5], 2);
 end;
 
 procedure PraseBin();
@@ -152,8 +180,7 @@ begin
   if LoadBinFile then begin
      repeat
        b:= 0;
-       while (b <> $C0) And (Not EndOfFile) do
-             b:= GetCurrentByte;
+       while (b <> $C0) And (Not EndOfFile) do b:= GetCurrentByte;
        if b = $C0 then begin
           CurrentRecord:= GetCurrentRecord;
           DateTimeToString(TimeStr, 'd-mmm-yy hh:nn:ss', GetDateTimeStr(CurrentRecord));
@@ -165,15 +192,61 @@ begin
   end;
 end;
 
-procedure TApp.CloseAppClick(Sender: TObject);
+function GetConfigParam(Param: String): TConfigParam;
+var ParamLen, i: Byte;
+    wStr: String;
 begin
-  App.Close
+  ParamLen:= Length(Param);
+  for i:= 1 to ParamLen do begin
+    if Param[i] = ConfigParamSeparator then begin
+      GetConfigParam.Param:= Trim(wStr);
+      wStr:= '';
+    end
+    else wStr:= wStr + Param[i];
+  end;
+  GetConfigParam.Value:= Trim(wStr);
+end;
+
+function ParseConfig(): String;
+var i, j, LineLen: Word;
+    wStr, tStr: String;
+    ConfigParam: TConfigParam;
+begin
+  for i:=0 to ConfigList.Count - 1 do begin
+     LineLen:= Length(ConfigList[i]);
+     for j:=1 to LineLen do begin
+        if ConfigList[i][j] = ConfigSeparator then begin
+           ConfigParam:= GetConfigParam(wStr);
+           tStr:= tStr + ConfigParam.Param + ' ' + ConfigParam.Value + NewLine;
+           wStr:= '';
+        end
+        else wStr:= wStr + ConfigList[i][j];
+     end;
+  end;
+  Result:= tStr;
+end;
+
+procedure TApp.LoagConfigClick(Sender: TObject);
+begin
+  App.OpenDialog.Filter:= '*.dat|*.dat';
+  App.OpenDialog.DefaultExt:= '.dat';
+  if App.OpenDialog.Execute then begin
+     if ConfigList is TStringList then FreeAndNil(ConfigList);
+     ConfigList:= TStringList.Create;
+     ConfigList.LoadFromFile(OpenDialog.FileName);
+     Memo.Text:= ParseConfig;
+  end;
 end;
 
 procedure TApp.OpenBinClick(Sender: TObject);
 begin
   App.Memo.Text:= '';
   PraseBin;
+end;
+
+procedure TApp.CloseAppClick(Sender: TObject);
+begin
+  App.Close
 end;
 
 end.
