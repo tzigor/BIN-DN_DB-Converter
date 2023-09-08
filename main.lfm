@@ -1,7 +1,7 @@
 object App: TApp
-  Left = 2002
+  Left = 2315
   Height = 595
-  Top = -715
+  Top = -381
   Width = 731
   Caption = 'App'
   ClientHeight = 595
