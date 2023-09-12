@@ -12,10 +12,14 @@ procedure SaveByteArray(AByteArray: TBytes; const AFileName: string);
 function InArray(Value: Byte; Arr: TBytes): Boolean;
 function FillSingle(H1, H0, L1, L0: Byte): Single;
 function FillDouble(H3, H2, H1, H0, L3, L2, L1, L0: Byte): Double;
-function FillInteger(H, L: Byte): Integer;
-function FillLongInt(H1, H0, L1, L0: Byte): longInt;
+function FillInteger(H, L: Byte): SmallInt;
+function FillLongInt(H1, H0, L1, L0, size: Byte): longInt;
 function FillWord(H, L: Byte): Word;
-function FillLongWord(H1, H0, L1, L0: Byte): longWord;
+function FillLongWord(H1, H0, L1, L0, size: Byte): longWord;
+function FillInt64(H3, H2, H1, H0, L3, L2, L1, L0, size: Byte): Int64;
+function FillQWord(H3, H2, H1, H0, L3, L2, L1, L0, size: Byte): QWord;
+
+function FormatSeconds(i: Integer): String;
 
 implementation
 
@@ -70,6 +74,7 @@ function FillSingle(H1, H0, L1, L0: Byte): Single;
 var Flt: Single;
     FltBytes: array[1..3] of Byte absolute Flt;
 begin
+   Flt:= 0;
    FltBytes[1]:= L0;
    FltBytes[2]:= L1;
    FltBytes[3]:= H0;
@@ -81,6 +86,7 @@ function FillDouble(H3, H2, H1, H0, L3, L2, L1, L0: Byte): Double;
 var Flt: Double;
     FltBytes: array[1..8] of Byte absolute Flt;
 begin
+   Flt:= 0;
    FltBytes[1]:= L0;
    FltBytes[2]:= L1;
    FltBytes[3]:= L2;
@@ -92,23 +98,26 @@ begin
    Result:= Flt;
 end;
 
-function FillInteger(H, L: Byte): Integer;
-var lW: Integer;
-    lWBytes: array[1..2] of Byte absolute lW;
+function FillInteger(H, L: Byte): SmallInt;
+var lW: SmallInt;
+    lWBytes: array[1..2] of ShortInt absolute lW;
 begin
+   lW:= 0;
    lWBytes[1]:= L;
    lWBytes[2]:= H;
    Result:= lW;
 end;
 
-function FillLongInt(H1, H0, L1, L0: Byte): longInt;
+function FillLongInt(H1, H0, L1, L0, size: Byte): longInt;
 var lW: longInt;
-    lWBytes: array[1..4] of Byte absolute lW;
+    lWBytes: array[1..4] of ShortInt absolute lW;
 begin
+   lW:= 0;
    lWBytes[1]:= L0;
    lWBytes[2]:= L1;
    lWBytes[3]:= H0;
-   lWBytes[4]:= H1;
+   if size = 4 then lWBytes[4]:= H1
+   else lWBytes[4]:= 0;
    Result:= lW;
 end;
 
@@ -116,21 +125,67 @@ function FillWord(H, L: Byte): Word;
 var lW: Word;
     lWBytes: array[1..2] of Byte absolute lW;
 begin
+   lW:= 0;
    lWBytes[1]:= L;
    lWBytes[2]:= H;
    Result:= lW;
 end;
 
-function FillLongWord(H1, H0, L1, L0: Byte): longWord;
+function FillLongWord(H1, H0, L1, L0, size: Byte): longWord;
 var lW: longWord;
     lWBytes: array[1..4] of Byte absolute lW;
 begin
+   lW:= 0;
    lWBytes[1]:= L0;
    lWBytes[2]:= L1;
    lWBytes[3]:= H0;
    lWBytes[4]:= H1;
+   if size = 4 then lWBytes[4]:= H1
+   else lWBytes[4]:= 0;
    Result:= lW;
 end;
+
+function FillInt64(H3, H2, H1, H0, L3, L2, L1, L0, size: Byte): Int64;
+var lW: Int64;
+    lWBytes: array[1..8] of ShortInt absolute lW;
+    i: Byte;
+begin
+   lW:= 0;
+   lWBytes[1]:= L0;
+   lWBytes[2]:= L1;
+   lWBytes[3]:= L2;
+   lWBytes[4]:= L3;
+   lWBytes[5]:= H0;
+   lWBytes[6]:= H1;
+   lWBytes[7]:= H2;
+   lWBytes[8]:= H3;
+   for i:=8 downto size + 1 do lWBytes[i]:= 0;
+   Result:= lW;
+end;
+
+function FillQWord(H3, H2, H1, H0, L3, L2, L1, L0, size: Byte): QWord;
+var lW: QWord;
+    lWBytes: array[1..8] of Byte absolute lW;
+    i: Byte;
+begin
+   lW:= 0;
+   lWBytes[1]:= L0;
+   lWBytes[2]:= L1;
+   lWBytes[3]:= L2;
+   lWBytes[4]:= L3;
+   lWBytes[5]:= H0;
+   lWBytes[6]:= H1;
+   lWBytes[7]:= H2;
+   lWBytes[8]:= H3;
+   for i:=8 downto size + 1 do lWBytes[i]:= 0;
+   Result:= lW;
+end;
+
+function FormatSeconds(i: Integer): String;
+begin
+   FormatSeconds:= IntToStr(i);
+end;
+
 
 end.
 

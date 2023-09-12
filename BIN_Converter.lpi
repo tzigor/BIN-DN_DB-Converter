@@ -38,6 +38,7 @@
         <Filename Value="main.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="App"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Main"/>
       </Unit>
@@ -45,6 +46,16 @@
         <Filename Value="utils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Utils"/>
+      </Unit>
+      <Unit>
+        <Filename Value="converttotext.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConvertToText"/>
+      </Unit>
+      <Unit>
+        <Filename Value="parsebin_var2.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ParseBin_Var2"/>
       </Unit>
     </Units>
   </ProjectOptions>
@@ -56,7 +67,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="C:\lazarus\components\synapse;C:\lazarus\components\synapse\source\lib\lib"/>
+      <OtherUnitFiles Value="C:\lazarus\components\synapse\;C:\lazarus\components\synapse\source\lib\lib\"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>

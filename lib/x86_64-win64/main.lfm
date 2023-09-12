@@ -1,7 +1,7 @@
 object App: TApp
-  Left = 2315
+  Left = 2364
   Height = 595
-  Top = -381
+  Top = -691
   Width = 731
   Caption = 'App'
   ClientHeight = 595
@@ -55,10 +55,32 @@ object App: TApp
         OnClick = LoagConfigClick
         TabOrder = 3
       end
+      object Button1: TButton
+        Left = 496
+        Height = 25
+        Top = 8
+        Width = 75
+        Caption = 'Button1'
+        OnClick = Button1Click
+        TabOrder = 4
+      end
+      object ConvertToTxt: TButton
+        Left = 368
+        Height = 25
+        Top = 8
+        Width = 112
+        Caption = 'Convert To Txt'
+        OnClick = ConvertToTxtClick
+        TabOrder = 5
+      end
     end
   end
   object OpenDialog: TOpenDialog
     Left = 16
+    Top = 560
+  end
+  object SaveDialog: TSaveDialog
+    Left = 88
     Top = 560
   end
 end

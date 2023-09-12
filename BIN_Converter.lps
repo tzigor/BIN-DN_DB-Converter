@@ -8,20 +8,21 @@
       <Unit>
         <Filename Value="BIN_Converter.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="21" Y="13"/>
-        <UsageCount Value="20"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="57" Y="15"/>
+        <UsageCount Value="76"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="main.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="App"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Main"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="277"/>
-        <CursorPos X="20" Y="295"/>
-        <UsageCount Value="20"/>
+        <TopLine Value="365"/>
+        <CursorPos X="61" Y="395"/>
+        <UsageCount Value="76"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -29,133 +30,151 @@
         <Filename Value="utils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Utils"/>
+        <EditorIndex Value="4"/>
+        <CursorPos X="44" Y="22"/>
+        <UsageCount Value="76"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="converttotext.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConvertToText"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="65"/>
-        <CursorPos X="20" Y="69"/>
-        <UsageCount Value="20"/>
+        <CursorPos X="27" Y="12"/>
+        <UsageCount Value="66"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="parsebin_var2.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ParseBin_Var2"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="10" Y="11"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Caret Line="516" TopLine="479"/>
       </Position>
       <Position>
         <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="275"/>
+        <Caret Line="499" Column="79" TopLine="479"/>
+      </Position>
+      <Position>
+        <Filename Value="utils.pas"/>
+        <Caret Line="99" Column="32" TopLine="85"/>
+      </Position>
+      <Position>
+        <Filename Value="utils.pas"/>
+        <Caret Line="15" Column="32"/>
+      </Position>
+      <Position>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="10" Column="139"/>
+      </Position>
+      <Position>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="175" Column="151" TopLine="157"/>
       </Position>
       <Position>
         <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Caret Line="395" Column="67" TopLine="366"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="9" Column="133"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="216" Column="120" TopLine="193"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="96" Column="64" TopLine="113"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="229" Column="108" TopLine="207"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="18" Column="113"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="625" Column="159" TopLine="607"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="2254" Column="103" TopLine="2235"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3201" Column="112" TopLine="3181"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3387" Column="79" TopLine="3365"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3415" Column="92" TopLine="3394"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3439" Column="91" TopLine="3409"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3461" Column="97" TopLine="3439"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3592" Column="91" TopLine="3567"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3615" Column="87" TopLine="3589"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3636" Column="77" TopLine="3617"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3656" Column="92" TopLine="3634"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="299" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3671" Column="86" TopLine="3641"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="301" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3713" Column="89" TopLine="3687"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="304" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="3734" Column="111" TopLine="3722"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="282" TopLine="275"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="9" Column="135"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="243" TopLine="232"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="168" Column="103" TopLine="157"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="277"/>
+        <Filename Value="parsebin_var2.pas"/>
+        <Caret Line="14" Column="47" TopLine="8"/>
       </Position>
       <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="277"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="277"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="277"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="295" TopLine="277"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="294" TopLine="277"/>
+        <Filename Value="BIN_Converter.lpr"/>
+        <Caret Line="15" Column="57"/>
       </Position>
     </JumpHistory>
     <RunParams>
