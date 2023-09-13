@@ -57,6 +57,16 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ParseBin_Var2"/>
       </Unit>
+      <Unit>
+        <Filename Value="usertypes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UserTypes"/>
+      </Unit>
+      <Unit>
+        <Filename Value="tffobjects.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="TffObjects"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

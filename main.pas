@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls, DateUtils,
-  Utils, ConvertToText;
+  Utils, ConvertToText, UserTypes, ParseBin_Var2, TffObjects;
 
 type
 
@@ -35,66 +35,6 @@ type
 
   end;
 
-Const
-  NewLine = #13#10;
-  Tab = #09;
-  MIN_FILE_LENGTH = 100;
-  //NoDateTimeCmd: TBytes = (22, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 112, 114);
-  DateSeparator = '-';
-  TimeSeparator = ':';
-  ConfigSeparator = ';';
-  ConfigParamSeparator = '=';
-
-type
-  String32 = String[32];
-  String24 = String[24];
-  String8 = String[8];
-  String2 = String[2];
-
-  TCurrentParameter = record
-    ParamType: String2;
-    I1: ShortInt;
-    U1: Byte;
-    I2: SmallInt;
-    U2: Word;
-    I4: LongInt;
-    U4: LongWord;
-    U8: QWord;
-    F4: Single;
-    F8: Double;
-    Str: String;
-  end;
-
-  TCurrentRecord = record
-    Addr: Byte;
-    Cmd: Byte;
-    N: Byte;
-    Data: TBytes;
-    Crc: Byte;
-  end;
-
-  TConfigParam = record
-    Param: String32;
-    Value: String8;
-  end;
-
-  TConfigData = record
-    Name: String32;
-    DataType: String2;
-    Size: Byte;
-  end;
-
-  TConfig = record
-    Addr: Byte;
-    Cmd: Byte;
-    hasDateTime: Boolean;
-    hasVersion: Boolean;
-    Version: Byte;
-    Data: array of TConfigData;
-  end;
-
-  TDataConfiguration = array of TConfig;
-
 var
   App: TApp;
   ConfigList: TStringList;
@@ -107,6 +47,8 @@ var
   DataConfiguration: TDataConfiguration;
   RecordOffset: Word;
   CurrentParameter: TCurrentParameter;
+  TffStructure: TTffStructure;
+  TffFrames: TTffFrames;
 
   function LoadBinFile(): Boolean;
   function GetCurrentByte(): Byte;
@@ -519,12 +461,15 @@ begin
 end;
 
 procedure TApp.Button1Click(Sender: TObject);
-var i: Byte;
+var i, b: Byte;
+    i1: ShortInt;
     wStr: String;
+    Data: TBytes;
+    F: Word;
 begin
-  wStr:= '';
-  for i:=8 downto 8 + 1 do wStr:= wStr + IntToStr(i) + '; ';
-  ShowMessage(wStr);
+  LoadBinFile;
+  ParseBin_Variant2;
+  //ShowMessage(IntToStr(Data[0]));
 end;
 
 end.

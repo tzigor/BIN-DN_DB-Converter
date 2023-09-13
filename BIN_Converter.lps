@@ -8,10 +8,9 @@
       <Unit>
         <Filename Value="BIN_Converter.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
-        <CursorPos X="57" Y="15"/>
-        <UsageCount Value="76"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="74" Y="13"/>
+        <UsageCount Value="126"/>
       </Unit>
       <Unit>
         <Filename Value="main.pas"/>
@@ -20,9 +19,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Main"/>
-        <TopLine Value="365"/>
-        <CursorPos X="61" Y="395"/>
-        <UsageCount Value="76"/>
+        <TopLine Value="440"/>
+        <CursorPos X="17" Y="472"/>
+        <UsageCount Value="126"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -31,8 +30,9 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Utils"/>
         <EditorIndex Value="4"/>
-        <CursorPos X="44" Y="22"/>
-        <UsageCount Value="76"/>
+        <TopLine Value="36"/>
+        <CursorPos X="24" Y="48"/>
+        <UsageCount Value="126"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -40,8 +40,9 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ConvertToText"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="27" Y="12"/>
-        <UsageCount Value="66"/>
+        <TopLine Value="55"/>
+        <CursorPos X="44" Y="76"/>
+        <UsageCount Value="116"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -50,131 +51,152 @@
         <UnitName Value="ParseBin_Var2"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="10" Y="11"/>
-        <UsageCount Value="23"/>
+        <TopLine Value="65"/>
+        <CursorPos Y="79"/>
+        <UsageCount Value="74"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="usertypes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UserTypes"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="57"/>
+        <CursorPos X="67" Y="80"/>
+        <UsageCount Value="35"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="tffobjects.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="TffObjects"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="106"/>
+        <CursorPos X="44" Y="131"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="main.pas"/>
-        <Caret Line="516" TopLine="479"/>
+        <Caret Line="471" TopLine="443"/>
       </Position>
       <Position>
         <Filename Value="main.pas"/>
-        <Caret Line="499" Column="79" TopLine="479"/>
-      </Position>
-      <Position>
-        <Filename Value="utils.pas"/>
-        <Caret Line="99" Column="32" TopLine="85"/>
-      </Position>
-      <Position>
-        <Filename Value="utils.pas"/>
-        <Caret Line="15" Column="32"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="10" Column="139"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="175" Column="151" TopLine="157"/>
+        <Caret Line="472" TopLine="443"/>
       </Position>
       <Position>
         <Filename Value="main.pas"/>
-        <Caret Line="395" Column="67" TopLine="366"/>
+        <Caret Line="473" TopLine="443"/>
       </Position>
       <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="9" Column="133"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="474" TopLine="443"/>
       </Position>
       <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="216" Column="120" TopLine="193"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="471" TopLine="443"/>
       </Position>
       <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="96" Column="64" TopLine="113"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="472" TopLine="443"/>
       </Position>
       <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="229" Column="108" TopLine="207"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="473" TopLine="443"/>
       </Position>
       <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="18" Column="113"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="625" Column="159" TopLine="607"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="2254" Column="103" TopLine="2235"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3201" Column="112" TopLine="3181"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3387" Column="79" TopLine="3365"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3415" Column="92" TopLine="3394"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3439" Column="91" TopLine="3409"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3461" Column="97" TopLine="3439"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3592" Column="91" TopLine="3567"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3615" Column="87" TopLine="3589"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3636" Column="77" TopLine="3617"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3656" Column="92" TopLine="3634"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3671" Column="86" TopLine="3641"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3713" Column="89" TopLine="3687"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="3734" Column="111" TopLine="3722"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="9" Column="135"/>
-      </Position>
-      <Position>
-        <Filename Value="converttotext.pas"/>
-        <Caret Line="168" Column="103" TopLine="157"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="474" TopLine="443"/>
       </Position>
       <Position>
         <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="14" Column="47" TopLine="8"/>
+        <Caret Line="74" TopLine="51"/>
       </Position>
       <Position>
-        <Filename Value="BIN_Converter.lpr"/>
-        <Caret Line="15" Column="57"/>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="82" TopLine="63"/>
+      </Position>
+      <Position>
+        <Filename Value="converttotext.pas"/>
+        <Caret Line="38" Column="18" TopLine="61"/>
+      </Position>
+      <Position>
+        <Filename Value="parsebin_var2.pas"/>
+        <Caret Line="59" Column="32" TopLine="36"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="80" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="81" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="82" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="83" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="80" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="81" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="82" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="83" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="84" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="168" TopLine="145"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="169" TopLine="145"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="170" TopLine="145"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="188" TopLine="166"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="189" TopLine="166"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="196" TopLine="166"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="168" TopLine="161"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="169" TopLine="161"/>
+      </Position>
+      <Position>
+        <Filename Value="tffobjects.pas"/>
+        <Caret Line="170" TopLine="161"/>
       </Position>
     </JumpHistory>
     <RunParams>
@@ -182,4 +204,15 @@
       <Modes ActiveMode=""/>
     </RunParams>
   </ProjectSession>
+  <Debugging>
+    <BreakPoints>
+      <Item>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="parsebin_var2.pas"/>
+        <Line Value="79"/>
+      </Item>
+    </BreakPoints>
+  </Debugging>
 </CONFIG>
