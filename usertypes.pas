@@ -11,7 +11,6 @@ Const
   NewLine = #13#10;
   Tab = #09;
   MIN_FILE_LENGTH = 100;
-  //NoDateTimeCmd: TBytes = (22, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 112, 114);
   DateSeparator = '-';
   TimeSeparator = ':';
   ConfigSeparator = ';';

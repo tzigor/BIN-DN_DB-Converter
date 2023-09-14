@@ -9,7 +9,7 @@ uses
   Utils, UserTypes;
 
   procedure TffDataChannelsSet(TFF_Ver: Byte);
-  procedure ParseBin_Variant2();
+  function BinParser(): Byte;
 
 implementation
 uses Main;
@@ -51,16 +51,14 @@ begin
   Parameters.Add('Tool type=SIB');
 end;
 
-procedure ParseBin_Variant2();
+function BinParser(): Byte;
 var
   s             : String;
   i             : Integer;
   d             : Double;
-  sInt          : SmallInt;
   w             : Word;
   ui            : UInt64;
   i64           : Int64;
-  shint         : ShortInt;
 
   CurrentRecord : TCurrentRecord;
   b             : Byte;
@@ -78,7 +76,6 @@ var
   Year,
   Month,
   Day           : Word;
-
 
 begin
   TFFDataChannelsSet(TFF_V30);
@@ -164,35 +161,35 @@ begin
                    Buf[06]..Buf[21]: данные. }
 
                   {Buf[06]..Buf[07]: показания акселерометра AX. }
-                  Move(CurrentRecord.Data[6], sInt, 2);
-                  s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AX';
+                  Move(CurrentRecord.Data[6], I2, 2);
+                  s:= #09#09#09#09 + FormatFloat('#0.0000', I2 * 1.2 / $7FFF) + #09 + 'показания акселерометра AX';
 
                   {Buf[08]..Buf[09]: показания акселерометра AY. }
-                  Move(CurrentRecord.Data[8], sInt, 2);
-                  s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AY';
+                  Move(CurrentRecord.Data[8], I2, 2);
+                  s:= #09#09#09#09 + FormatFloat('#0.0000', I2 * 1.2 / $7FFF) + #09 + 'показания акселерометра AY';
 
                   {Buf[10]..Buf[11]: показания акселерометра AZ. }
-                  Move(CurrentRecord.Data[10], sInt, 2);
-                  s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AZ';
+                  Move(CurrentRecord.Data[10], I2, 2);
+                  s:= #09#09#09#09 + FormatFloat('#0.0000', I2 * 1.2 / $7FFF) + #09 + 'показания акселерометра AZ';
 
                   {Buf[12]..Buf[13]: показания магнитометра BX. }
-                  Move(CurrentRecord.Data[12], sInt, 2);
-                  i64:= sInt;
+                  Move(CurrentRecord.Data[12], I2, 2);
+                  i64:= I2;
                   s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BX';
 
                   {Buf[14]..Buf[15]: показания магнитометра BY. }
-                  Move(CurrentRecord.Data[14], sInt, 2);
-                  i64:= sInt;
+                  Move(CurrentRecord.Data[14], I2, 2);
+                  i64:= I2;
                   s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BY';
 
                   {Buf[16]..Buf[17]: показания магнитометра BZ. }
-                  Move(CurrentRecord.Data[16], sInt, 2);
-                  i64:= sInt;
+                  Move(CurrentRecord.Data[16], I2, 2);
+                  i64:= I2;
                   s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BZ';
 
                   {Buf[18]..Buf[19]: приращение отклонителя. }
-                  Move(CurrentRecord.Data[18], sInt, 2);
-                  s:= #09#09#09#09 + IntToStr(sInt) + #09#09 + 'приращение отклонителя';
+                  Move(CurrentRecord.Data[18], I2, 2);
+                  s:= #09#09#09#09 + IntToStr(I2) + #09#09 + 'приращение отклонителя';
 
                   {Buf[20]..Buf[21]: максимум пульсаций акселерометров. }
                   Move(CurrentRecord.Data[20], w, 2);
@@ -206,30 +203,30 @@ begin
                    Buf[06]..Buf[19]: данные. }
 
                   {Buf[06]..Buf[07]: показания акселерометра AX. }
-                  Move(CurrentRecord.Data[6], sInt, 2);
-                  s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AX';
+                  Move(CurrentRecord.Data[6], I2, 2);
+                  s:= #09#09#09#09 + FormatFloat('#0.0000', I2 * 1.2 / $7FFF) + #09 + 'показания акселерометра AX';
 
                   {Buf[08]..Buf[09]: показания акселерометра AY. }
-                  Move(CurrentRecord.Data[8], sInt, 2);
-                  s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AY';
+                  Move(CurrentRecord.Data[8], I2, 2);
+                  s:= #09#09#09#09 + FormatFloat('#0.0000', I2 * 1.2 / $7FFF) + #09 + 'показания акселерометра AY';
 
                   {Buf[10]..Buf[11]: показания акселерометра AZ. }
-                  Move(CurrentRecord.Data[10], sInt, 2);
-                  s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AZ';
+                  Move(CurrentRecord.Data[10], I2, 2);
+                  s:= #09#09#09#09 + FormatFloat('#0.0000', I2 * 1.2 / $7FFF) + #09 + 'показания акселерометра AZ';
 
                   {Buf[12]..Buf[13]: показания магнитометра BX. }
-                  Move(CurrentRecord.Data[12], sInt, 2);
-                  i64:= sInt;
+                  Move(CurrentRecord.Data[12], I2, 2);
+                  i64:= I2;
                   s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BX';
 
                   {Buf[14]..Buf[15]: показания магнитометра BY. }
-                  Move(CurrentRecord.Data[14], sInt, 2);
-                  i64:= sInt;
+                  Move(CurrentRecord.Data[14], I2, 2);
+                  i64:= I2;
                   s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BY';
 
                   {Buf[16]..Buf[17]: показания магнитометра BZ. }
-                  Move(CurrentRecord.Data[16], sInt, 2);
-                  i64:= sInt;
+                  Move(CurrentRecord.Data[16], I2, 2);
+                  i64:= I2;
                   s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BZ';
 
                   {Buf[18]: скорость вращения буровой колонны, об/мин. }
@@ -237,8 +234,8 @@ begin
 
                   {Buf[19]: температура модуля инклинометра. }
                    //s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[19]) + #09#09 + 'температура модуля инклинометра';
-                   Move(CurrentRecord.Data[19], shint, 1);
-                   s:= #09#09#09#09 + IntToStr(shint) + #09#09 + 'температура модуля инклинометра';
+                   Move(CurrentRecord.Data[19], I1, 1);
+                   s:= #09#09#09#09 + IntToStr(I1) + #09#09 + 'температура модуля инклинометра';
                 end;
                 {$ENDREGION}
 
@@ -871,8 +868,8 @@ begin
                           s:= #09#09#09#09 + IntToStr(i64) + #09+ 'время длит. сред. удара превышающего 150G (*25мкс)';
 
                           {Buf[55]: темепратура  }
-                          Move(CurrentRecord.Data[55], shint, 1);
-                          s:= #09#09#09#09 + IntToStr(shint) + #09+ 'температура инклинометра';
+                          Move(CurrentRecord.Data[55], I1, 1);
+                          s:= #09#09#09#09 + IntToStr(I1) + #09+ 'температура инклинометра';
 
                         end;
                         {$ENDREGION}
@@ -933,8 +930,8 @@ begin
                           s:= #09#09#09#09 + IntToStr(i64) + #09+ 'время длит. сред. удара превышающего 150G (*25мкс)';
 
                           {Buf[55]: темепратура  }
-                          Move(CurrentRecord.Data[55], shint, 1);
-                          s:= #09#09#09#09 + IntToStr(shint) + #09+ 'температура инклинометра';
+                          Move(CurrentRecord.Data[55], I1, 1);
+                          s:= #09#09#09#09 + IntToStr(I1) + #09+ 'температура инклинометра';
 
                            {Buf[56-57]: оставшиеся время в минутах до включения передачи }
                           Move(CurrentRecord.Data[56], w, 2);
@@ -1000,8 +997,8 @@ begin
 
 
                           {Buf[55]: темепратура  }
-                          Move(CurrentRecord.Data[55], shint, 1);
-                          s:= #09#09#09#09 + IntToStr(shint) + #09+ 'температура инклинометра';
+                          Move(CurrentRecord.Data[55], I1, 1);
+                          s:= #09#09#09#09 + IntToStr(I1) + #09+ 'температура инклинометра';
 
                              {Buf[56-57]: оставшиеся время в минутах до включения передачи }
                           Move(CurrentRecord.Data[56], w, 2);

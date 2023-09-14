@@ -67,6 +67,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="TffObjects"/>
       </Unit>
+      <Unit>
+        <Filename Value="bin_db_converter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="BIN_DB_Converter"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

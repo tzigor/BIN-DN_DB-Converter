@@ -7,7 +7,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls, DateUtils,
-  Utils, ConvertToText, UserTypes, ParseBin_Var2, TffObjects;
+  Utils, ConvertToText, UserTypes, ParseBin_Var2, TffObjects, BIN_DB_Converter;
 
 type
 
@@ -53,6 +53,7 @@ var
   TffVersion         : Byte;
   FirstValidRecord   : Boolean;
   FirstDateTime      : TDateTime;
+  BinDbConverter    : TBinDbConverter;
 
   function LoadBinFile(): Boolean;
   function GetCurrentByte(): Byte;
@@ -472,9 +473,12 @@ var i, b: Byte;
     F: Word;
 begin
   if LoadBinFile then begin
-  ParseBin_Variant2;
-  //ShowMessage(IntToStr(Data[0]));
+     BinParser;
+     BinDbConverter.Init;
+     BinDbConverter.ParametersComposer(Parameters);
+     //ShowMessage(IntToStr(Data[0]));
   end;
+end;
 
 end.
 

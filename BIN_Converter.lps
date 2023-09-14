@@ -9,8 +9,8 @@
         <Filename Value="BIN_Converter.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="74" Y="13"/>
-        <UsageCount Value="169"/>
+        <CursorPos X="92" Y="13"/>
+        <UsageCount Value="174"/>
       </Unit>
       <Unit>
         <Filename Value="main.pas"/>
@@ -19,9 +19,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Main"/>
-        <TopLine Value="323"/>
-        <CursorPos X="19" Y="348"/>
-        <UsageCount Value="169"/>
+        <TopLine Value="379"/>
+        <CursorPos X="96" Y="387"/>
+        <UsageCount Value="174"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -30,8 +30,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Utils"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="24" Y="48"/>
-        <UsageCount Value="169"/>
+        <CursorPos X="11"/>
+        <UsageCount Value="174"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -39,30 +39,28 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ConvertToText"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="15"/>
+        <TopLine Value="23"/>
         <CursorPos X="44" Y="76"/>
-        <UsageCount Value="159"/>
+        <UsageCount Value="164"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="parsebin_var2.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ParseBin_Var2"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="1879"/>
-        <CursorPos X="47" Y="1911"/>
-        <UsageCount Value="117"/>
+        <TopLine Value="10"/>
+        <CursorPos X="75" Y="1905"/>
+        <UsageCount Value="122"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="usertypes.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="UserTypes"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="61"/>
-        <CursorPos X="39" Y="25"/>
-        <UsageCount Value="78"/>
+        <EditorIndex Value="6"/>
+        <CursorPos X="82" Y="23"/>
+        <UsageCount Value="83"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -70,132 +68,150 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="TffObjects"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="176"/>
-        <CursorPos X="61" Y="201"/>
-        <UsageCount Value="68"/>
+        <TopLine Value="99"/>
+        <CursorPos X="105" Y="142"/>
+        <UsageCount Value="73"/>
         <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="bin_db_converter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="BIN_DB_Converter"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="34"/>
+        <CursorPos X="26" Y="59"/>
+        <UsageCount Value="24"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\win64\system.pp"/>
+        <UnitName Value="System"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="95" Y="40"/>
+        <UsageCount Value="10"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="81" TopLine="54"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="39" TopLine="10"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="82" TopLine="54"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="40" TopLine="10"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="83" TopLine="54"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="41" TopLine="10"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="1930" Column="4" TopLine="1899"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="49" Column="68" TopLine="21"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="1931" TopLine="1901"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="41" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="1805" Column="102" TopLine="1787"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="42" Column="27" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="1931" TopLine="1901"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="46" Column="58" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="86" TopLine="1900"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="52" Column="69" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="1931" TopLine="1900"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="40" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="tffobjects.pas"/>
-        <Caret Line="50" Column="18" TopLine="36"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="41" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="59" Column="28" TopLine="50"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="42" TopLine="22"/>
       </Position>
       <Position>
         <Filename Value="main.pas"/>
-        <Caret Line="39" Column="7" TopLine="21"/>
+        <Caret Line="39" Column="103" TopLine="29"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="83" Column="49" TopLine="65"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="42" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="42" TopLine="35"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="43" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="43" TopLine="35"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="29" Column="29" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="44" TopLine="35"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="43" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="45" TopLine="35"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="45" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="47" TopLine="35"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="46" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="48" TopLine="35"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="47" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="49" TopLine="35"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="48" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="50" TopLine="35"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="49" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="51" TopLine="35"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="50" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="94" TopLine="79"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="48" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="95" TopLine="79"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="49" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="94" TopLine="79"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="50" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="95" TopLine="79"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="48" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="94" TopLine="79"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="49" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="95" TopLine="79"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="50" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="94" TopLine="79"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="48" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="parsebin_var2.pas"/>
-        <Caret Line="96" TopLine="79"/>
+        <Filename Value="bin_db_converter.pas"/>
+        <Caret Line="49" TopLine="22"/>
       </Position>
     </JumpHistory>
     <RunParams>
