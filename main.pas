@@ -36,19 +36,23 @@ type
   end;
 
 var
-  App: TApp;
-  ConfigList: TStringList;
-  ResultList: TStringList;
-  Bytes: TBytes;
-  BinDbData: TBytes;
-  currentFileSize: LongWord;
-  EndOfFile: Boolean;
-  Offset: LongWord;
-  DataConfiguration: TDataConfiguration;
-  RecordOffset: Word;
-  CurrentParameter: TCurrentParameter;
-  TffStructure: TTffStructure;
-  TffFrames: TTffFrames;
+  App                : TApp;
+  ConfigList         : TStringList;
+  ResultList         : TStringList;
+  Bytes              : TBytes;
+  BinDbData          : TBytes;
+  currentFileSize    : LongWord;
+  EndOfFile          : Boolean;
+  Offset             : LongWord;
+  DataConfiguration  : TDataConfiguration;
+  RecordOffset       : Word;
+  CurrentParameter   : TCurrentParameter;
+  TffStructure       : TTffStructure;
+  TffFrames          : TTffFrames;
+  Parameters         : TStringList;
+  TffVersion         : Byte;
+  FirstValidRecord   : Boolean;
+  FirstDateTime      : TDateTime;
 
   function LoadBinFile(): Boolean;
   function GetCurrentByte(): Byte;
@@ -467,10 +471,10 @@ var i, b: Byte;
     Data: TBytes;
     F: Word;
 begin
-  LoadBinFile;
+  if LoadBinFile then begin
   ParseBin_Variant2;
   //ShowMessage(IntToStr(Data[0]));
-end;
+  end;
 
 end.
 

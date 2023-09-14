@@ -15,9 +15,8 @@ implementation
 uses Main;
 
 procedure TffDataChannelsSet(Tff_Ver: Byte);
-var Size: Word;
-
 begin
+  TffVersion:= Tff_Ver;
   TffStructure.Init;
   TffStructure.AddChannel(TffStructure.TffDataChannelComposer('TIME', '100S', 'F4', '1', Tff_Ver));
   // Cmd - 42
@@ -34,8 +33,22 @@ begin
   TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Shock_X', 'g', 'U1', '1', Tff_Ver));
   TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Shock_Y', 'g', 'U1', '1', Tff_Ver));
   TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Shock_Z', 'g', 'U1', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Vib_X', 'g', 'U2', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Vib_Lat', 'g', 'U2', '1', Tff_Ver));
+  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Vib_X', 'g', 'F4', '1', Tff_Ver));
+  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Vib_Lat', 'g', 'F4', '1', Tff_Ver));
+end;
+
+procedure CreateParameters();
+begin
+  if Parameters is TStringList then FreeAndNil(Parameters);
+  Parameters:= TStringList.Create;
+  if TffVersion = TFF_V20 then Parameters.Add('FFV=V2.0')
+  else if TffVersion = TFF_V30 then Parameters.Add('FFV=V3.0')
+       else if TffVersion = TFF_V40 then Parameters.Add('FFV=V4.0');
+  Parameters.Add('MRL=' + IntToStr(TffFrames.GetRecordSize));
+  Parameters.Add('Acquisition Start Date=' + FormatDateTime('DD-MMM-YYYY',FirstDateTime));
+  Parameters.Add('Acquisition Start Time=' + FormatDateTime('hh:nn:ss',FirstDateTime));
+  Parameters.Add('TYPE=TFF');
+  Parameters.Add('Tool type=SIB');
 end;
 
 procedure ParseBin_Variant2();
@@ -44,38 +57,53 @@ var
   i             : Integer;
   d             : Double;
   sInt          : SmallInt;
-  w,
-  RecordNumber  : Word;
-  CurrentRecord : TCurrentRecord;
+  w             : Word;
   ui            : UInt64;
   i64           : Int64;
   shint         : ShortInt;
-  smi           : SmallInt;
+
+  CurrentRecord : TCurrentRecord;
   b             : Byte;
-  DateTime      : TDateTime;
+  DateTime,
+  PrevDateTime  : TDateTime;
+  I1            : ShortInt;
+  U1            : Byte;
+  I2            : SmallInt;
+  U2            : Word;
+  I4            : LongInt;
+  U4            : LongWord;
+  U8            : QWord;
+  F4            : Single;
+  F8            : Double;
+  Year,
+  Month,
+  Day           : Word;
+
 
 begin
   TFFDataChannelsSet(TFF_V30);
+  PrevDateTime:= 0;
+  FirstValidRecord:= False;
   repeat
     b:= 0;
-    RecordNumber:= 0;
     while (b <> $C0) And (Not EndOfFile) do b:= GetCurrentByte;
 
     if b = $C0 then begin
       CurrentRecord:= GetCurrentRecord;
       if  CurrentRecord.N > 0 then begin
-          Inc(RecordNumber);
-          if(CurrentRecord.Cmd = 22) or (CurrentRecord.Cmd = 101)  or (CurrentRecord.Cmd = 102) or (CurrentRecord.Cmd = 103) or (CurrentRecord.Cmd = 104)
-             or (CurrentRecord.Cmd = 105) or (CurrentRecord.Cmd = 106) or (CurrentRecord.Cmd = 107) or (CurrentRecord.Cmd = 108) or (CurrentRecord.Cmd = 109)
-             or (CurrentRecord.Cmd = 110) or (CurrentRecord.Cmd = 111) or (CurrentRecord.Cmd = 112) or (CurrentRecord.Cmd = 113) or (CurrentRecord.Cmd = 114)
-          then
-          else begin
-           // Event DateTime
-             DateTime:= EncodeDateTime(StrToInt(IntToHex(CurrentRecord.Data[0])), StrToInt(IntToHex(CurrentRecord.Data[1])), StrToInt(IntToHex(CurrentRecord.Data[2])),
+          DateTime:= EncodeDateTime(2000 + StrToInt(IntToHex(CurrentRecord.Data[0])), StrToInt(IntToHex(CurrentRecord.Data[1])), StrToInt(IntToHex(CurrentRecord.Data[2])),
                       StrToInt(IntToHex(CurrentRecord.Data[3])), StrToInt(IntToHex(CurrentRecord.Data[4])), StrToInt(IntToHex(CurrentRecord.Data[5])), 0);
+          DecodeDate(DateTime, Year, Month, Day);
+          if (Year > 2020) And (Not FirstValidRecord) then begin
+             FirstDateTime:= DateTime;
+             FirstValidRecord:= True;
           end;
-          TffFrames.AddRecord(DateTime, TffStructure.GetDataChannelSize, TffStructure.GetTFFDataChannels);
-          //SaveByteArray(TffFrames.GetCurrentFrameRecord.Data, 'TffFrames.bin');
+          if PrevDateTime <> DateTime then begin
+             TffFrames.AddRecord(DateTime, TffStructure.GetDataChannelSize, TffStructure.GetTFFDataChannels);
+             F4:= 0;
+             TffFrames.AddData(TffStructure.GetTFFDataChannels[0].Offset, F4);
+          end;
+          PrevDateTime:= DateTime;
           case CurrentRecord.Cmd of
             01: {$REGION ' запись при выключении питания '}
                 begin
@@ -1580,22 +1608,25 @@ begin
                           {Buf[29]: ct_flip_flop   . }
                           s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[29]) + #09+ 'количество ошибок пульсатора';
 
-                          {Buf[30]..Buf[31]: обороты генератора. }
-                          Move(CurrentRecord.Data[30], w, 2);
-                          s:= #09#09#09#09 + IntToStr(w) + #09+ 'обороты генератора (об/мин.)';
+                          {Buf[30]..Buf[31]: обороты генератора. CRPM}
+                          Move(CurrentRecord.Data[30], U2, 2);
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[9].Offset, U2);
 
                           {Buf[32]..Buf[35]: время длит.  сред. удара превышающего  50G (мкс). }
                           Move(CurrentRecord.Data[32], i, 4);
                           s:= #09#09#09#09 + IntToStr(i*25) + #09+ 'время длит.  сред. удара превышающего 50G (мкс)';
 
                           {Buf[36]: максимум по оси Х. }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[37]) + #09+ 'максимум по оси Х (g)';         //поменяли местами ХУ т.к. перепутали на плате 14.04.20 Коновалов
+                          U1:= CurrentRecord.Data[37];         //поменяли местами ХУ т.к. перепутали на плате 14.04.20 Коновалов
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[10].Offset, U1);
 
                           {Buf[37]: максимум по оси Y. }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[36]) + #09+ 'максимум по оси Y (g)';
+                          U1:= CurrentRecord.Data[36];
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[11].Offset, U1);
 
                           {Buf[38]: максимум по оси Z. }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[38]) + #09+ 'максимум по оси Z (g)';
+                          U1:= CurrentRecord.Data[38];
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[12].Offset, U1);
 
                           {Buf[39]..Buf[40]: код телеметрии. }
                           Move(CurrentRecord.Data[39], w, 2);
@@ -1613,13 +1644,15 @@ begin
                           Move(CurrentRecord.Data[49], i, 2);
                           s:= #09#09#09#09 + IntToStr(i) + #09+ 'максимальное количество ударов в секунду в течении минуты';
 
-                            {Buf[51]..Buf[52]: осевая вибрация по оси Х  }
-                          Move(CurrentRecord.Data[51], w, 2);
-                           s:= #09#09#09#09 + Format('%.1f', [w * 0.25])+ #09+ 'осевая вибрация по оси Х';
+                           {Buf[51]..Buf[52]: осевая вибрация по оси Х  }
+                          Move(CurrentRecord.Data[51], U2, 2);
+                          F4:= U2 * 0.25;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[13].Offset, F4);
 
                            {Buf[53]..Buf[54]: осевая вибрация по осям Y,Z  }
-                          Move(CurrentRecord.Data[53], w, 2);
-                           s:= #09#09#09#09 + Format('%.1f', [w * 0.5])+ #09+ 'боковая вибрация по осям Y,Z';
+                          Move(CurrentRecord.Data[53], U2, 2);
+                          F4:= U2 * 0.5;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[14].Offset, F4);
 
                     end;
                          {$ENDREGION}
@@ -1759,88 +1792,88 @@ begin
 
                  {далее интерпретируем содержимое записи в зав. от номера её версии. }
                   case CurrentRecord.Data[6] of                                   {в новом формате записей в байте [6] всегда лежит № версии                      }
-                    00: {$REGION ' версия №00 '}
+                    00, 02: {$REGION ' версия №00 '}
                         begin
                           {Buf[07]..Buf[08]: показания акселерометра AX. }
-                          Move(CurrentRecord.Data[07], sInt, 2);
-                          s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AX';
+                          Move(CurrentRecord.Data[07], I2, 2);
+                          F4:= I2 * 1.2 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[1].Offset, F4);
 
                           {Buf[09]..Buf[10]: показания акселерометра AY. }
-                          Move(CurrentRecord.Data[09], sInt, 2);
-                          s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AY';
+                          Move(CurrentRecord.Data[09], I2, 2);
+                          F4:= I2 * 1.2 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[2].Offset, F4);
 
                           {Buf[11]..Buf[12]: показания акселерометра AZ. }
-                          Move(CurrentRecord.Data[11], sInt, 2);
-                          s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AZ';
+                          Move(CurrentRecord.Data[11], I2, 2);
+                          F4:= I2 * 1.2 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[3].Offset, F4);
 
                           {Buf[13]..Buf[14]: показания магнитометра BX. }
-                          Move(CurrentRecord.Data[13], sInt, 2);
-                          i64:= sInt;
-                          s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BX';
-
+                          Move(CurrentRecord.Data[13], I2, 2);
+                          F4:= I2 * 1200 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[4].Offset, F4);
 
                           {Buf[15]..Buf[16]: показания магнитометра BY. }
-                          Move(CurrentRecord.Data[15], sInt, 2);
-                          i64:= sInt;
-                          s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BY';
+                          Move(CurrentRecord.Data[15], I2, 2);
+                          F4:= I2 * 1200 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[5].Offset, F4);
 
                           {Buf[17]..Buf[18]: показания магнитометра BZ. }
-                          Move(CurrentRecord.Data[17], sInt, 2);
-                          i64:= sInt;
-                          s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BZ';
-
+                          Move(CurrentRecord.Data[17], I2, 2);
+                          F4:= I2 * 1200 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[6].Offset, F4);
 
                           {Buf[19]: скорость буровой колонны об/мин. }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[19]) + ' об/мин'#09+ 'скорость буровой колонны';
+                          U1:= CurrentRecord.Data[19];
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[7].Offset, U1);
 
                           {Buf[20]: температура модуля инклинометра. }
-                          Move(CurrentRecord.Data[20], shint, 1);
-                          s:= #09#09#09#09 + IntToStr(shint) + #09 + 'температура модуля инклинометра';
+                          I1:= CurrentRecord.Data[20];
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[8].Offset, I1);
 
                           {Buf[21]: неравномерность вращения. }
                           s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[21]) + #09+ 'неравномерность вращения';
-
                         end;
-                        {$ENDREGION}
-
                     01: {$REGION ' версия №01 '}
                         begin
                           {Buf[07]..Buf[08]: показания акселерометра AX. }
-                          Move(CurrentRecord.Data[07], sInt, 2);
-                          s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AX';
+                          Move(CurrentRecord.Data[07], I2, 2);
+                          F4:= I2 * 1.2 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[1].Offset, F4);
 
                           {Buf[09]..Buf[10]: показания акселерометра AY. }
-                          Move(CurrentRecord.Data[09], sInt, 2);
-                          s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AY';
+                          Move(CurrentRecord.Data[09], I2, 2);
+                          F4:= I2 * 1.2 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[2].Offset, F4);
 
                           {Buf[11]..Buf[12]: показания акселерометра AZ. }
-                          Move(CurrentRecord.Data[11], sInt, 2);
-                          s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AZ';
-
+                          Move(CurrentRecord.Data[11], I2, 2);
+                          F4:= I2 * 1.2 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[3].Offset, F4);
 
                           {Buf[13]..Buf[14]: показания магнитометра BX. }
-                          Move(CurrentRecord.Data[13], sInt, 2);
-                          i64:= sInt;
-                          s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BX';
-
+                          Move(CurrentRecord.Data[13], I2, 2);
+                          F4:= I2 * 1200 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[4].Offset, F4);
 
                           {Buf[15]..Buf[16]: показания магнитометра BY. }
-                          Move(CurrentRecord.Data[15], sInt, 2);
-                          i64:= sInt;
-                          s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BY';
-
+                          Move(CurrentRecord.Data[15], I2, 2);
+                          F4:= I2 * 1200 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[5].Offset, F4);
 
                           {Buf[17]..Buf[18]: показания магнитометра BZ. }
-                          Move(CurrentRecord.Data[17], sInt, 2);
-                          i64:= sInt;
-                          s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BZ';
+                          Move(CurrentRecord.Data[17], I2, 2);
+                          F4:= I2 * 1200 / $7FFF;
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[6].Offset, F4);
 
                           {Buf[19]: скорость буровой колонны об/мин. }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[19]) + ' об/мин'#09+ 'скорость буровой колонны';
+                          U1:= CurrentRecord.Data[19];
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[7].Offset, U1);
 
                           {Buf[20]: температура модуля инклинометра. }
-                         Move(CurrentRecord.Data[20], shint, 1);
-                          s:= #09#09#09#09 + IntToStr(shint) + '°'#09+ 'температура модуля инклинометра';
+                          I1:= CurrentRecord.Data[20];
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[8].Offset, I1);
 
                           {Buf[21]: неравномерность вращения. }
                           s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[21]) + #09+ 'неравномерность вращения';
@@ -1849,69 +1882,34 @@ begin
                           Move(CurrentRecord.Data[22], i, 4);
                           s:= #09#09#09#09 + IntToStr(i*100) + ' мкс'#09+ 'время удара >50G';
 
-                          {Buf[26]: максимальный удар по оси Х }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[27]) + ' G'#09+ 'максимальный удар по оси Х';          //поменяли местами ХУ т.к. перепутали на плате 14.04.20 Коновалов
 
-                           {Buf[27]: максимальный удар по оси Y }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[26]) + ' G'#09+ 'максимальный удар по оси Y';
+                          {Buf[26]: максимум по оси Х. }
+                          U1:= CurrentRecord.Data[27];         //поменяли местами ХУ т.к. перепутали на плате 14.04.20 Коновалов
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[10].Offset, U1);
 
-                          {Buf[28]: максимальный удар по оси Z }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[28]) + ' G'#09+ 'максимальный удар по оси Z';
+                          {Buf[27]: максимум по оси Y. }
+                          U1:= CurrentRecord.Data[26];
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[11].Offset, U1);
 
-                        end;
-                        {$ENDREGION}
-
-                    02: {$REGION ' версия №02 '}
-                        begin
-                          {Buf[07]..Buf[08]: показания акселерометра AX. }
-                          Move(CurrentRecord.Data[07], sInt, 2);
-                          s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AX';
-
-                          {Buf[09]..Buf[10]: показания акселерометра AY. }
-                          Move(CurrentRecord.Data[09], sInt, 2);
-                          s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AY';
-
-                          {Buf[11]..Buf[12]: показания акселерометра AZ. }
-                          Move(CurrentRecord.Data[11], sInt, 2);
-                          s:= #09#09#09#09 + FormatFloat('#0.0000', sInt * 1.2 / $7FFF) + #09 + 'показания акселерометра AZ';
-
-                          {Buf[13]..Buf[14]: показания магнитометра BX. }
-                          Move(CurrentRecord.Data[13], sInt, 2);
-                          i64:= sInt;
-                          s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BX';
-
-                          {Buf[15]..Buf[16]: показания магнитометра BY. }
-                          Move(CurrentRecord.Data[15], sInt, 2);
-                          i64:= sInt;
-                          s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BY';
-
-                          {Buf[17]..Buf[18]: показания магнитометра BZ. }
-                          Move(CurrentRecord.Data[17], sInt, 2);
-                          i64:= sInt;
-                          s:= #09#09#09#09 + FormatFloat('#0.00', i64 * 120000 / $7FFF) + #09 + 'показания магнитометра BZ';
-
-                          {Buf[19]: скорость буровой колонны об/мин. }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[19]) + ' об/мин'#09+ 'скорость буровой колонны';
-
-                          {Buf[20]: температура модуля инклинометра. }
-                          Move(CurrentRecord.Data[20], shint, 1);
-                          s:= #09#09#09#09 + IntToStr(shint) + '°'#09+ 'температура модуля инклинометра';
-
-                          {Buf[21]: неравномерность вращения. }
-                          s:= #09#09#09#09 + IntToStr(CurrentRecord.Data[21]) + #09+ 'неравномерность вращения';
+                          {Buf[28]: максимум по оси Z. }
+                          U1:= CurrentRecord.Data[28];
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[12].Offset, U1);
 
                         end;
                         {$ENDREGION}
+
                   end;
                 end;
                 {$ENDREGION}
 
           end;
+        end;
       end;
-   end;
-
+   //SaveByteArray(TffFrames.GetCurrentFrameRecord.Data, 'TffFrames.bin');
   until EndOfFile;
-
+  if FirstValidRecord then CreateParameters
+  else ShowMessage('No Valid Date/Time');
+  //Parameters.SaveToFile('Parameters.txt');
 end;
 
 end.

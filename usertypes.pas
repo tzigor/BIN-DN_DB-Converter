@@ -37,6 +37,7 @@ type
     RepCode     : String2;
     Samples     : String10;
     AbsentValue : String20;
+    Offset      : Word;
   end;
 
   TTFFDataChannels = array of TTFFDataChannel;

@@ -1,0 +1,6 @@
+FFV=V3.0
+MRL=43
+Acquisition Start Date=04-Sep-2023
+Acquisition Start Time=15:21:48
+TYPE=TFF
+Tool type=SIB

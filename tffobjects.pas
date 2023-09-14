@@ -11,9 +11,10 @@ uses
 type
   TTffStructure = object
   private
-     DataChannelSize: Word;
+     DataChannelSize : Word;
      NumberOfChannels: Word;
-     TFFDataChannels: TTFFDataChannels;
+     TFFDataChannels : TTFFDataChannels;
+     CurrentOffset   : Word;
   public
      constructor Init;
      destructor Done;
@@ -29,20 +30,20 @@ type
   private
      FrameRecords: array of TFrameRecord;
      NumberOfRecords: longWord;
-     DataOffset: Word;
   public
      constructor Init;
      destructor Done;
      function GetCurrentFrameRecord: TFrameRecord;
      procedure AddRecord(DateTime: TDateTime; Size: Word; TFFDataChannels: TTFFDataChannels);
-     procedure AddData(Data: ShortInt);
-     procedure AddData(Data: Byte);
-     procedure AddData(Data: SmallInt);
-     procedure AddData(Data: Word);
-     procedure AddData(Data: LongInt);
-     procedure AddData(Data: LongWord);
-     procedure AddData(Data: Single);
-     procedure AddData(Data: Double);
+     procedure AddData(Index: Word; Data: ShortInt);
+     procedure AddData(Index: Word; Data: Byte);
+     procedure AddData(Index: Word; Data: SmallInt);
+     procedure AddData(Index: Word; Data: Word);
+     procedure AddData(Index: Word; Data: LongInt);
+     procedure AddData(Index: Word; Data: LongWord);
+     procedure AddData(Index: Word; Data: Single);
+     procedure AddData(Index: Word; Data: Double);
+     function GetRecordSize: Word;
   end;
 
 implementation
@@ -51,6 +52,7 @@ constructor TTffStructure.Init;
   begin
      DataChannelSize:= 0;
      NumberOfChannels:= 0;
+     CurrentOffset:= 0;
      SetLength(TffDataChannels, 0);
   end;
 
@@ -91,12 +93,19 @@ constructor TTffStructure.Init;
     TffDataChannel.RepCode:= RepCode;
     case LowerCase(RepCode) of
        'f4', 'f8': TffDataChannel.AbsentValue:= '-999.25';
-       'i1': TffDataChannel.AbsentValue:= '127';
-       'u1': TffDataChannel.AbsentValue:= '255';
-       'i2': TffDataChannel.AbsentValue:= '32767';
-       'u2': TffDataChannel.AbsentValue:= '65535';
-       'u4': TffDataChannel.AbsentValue:= '4294967295';
-       'i4': TffDataChannel.AbsentValue:= '2147483647';
+       'i1'      : TffDataChannel.AbsentValue:= '127';
+       'u1'      : TffDataChannel.AbsentValue:= '255';
+       'i2'      : TffDataChannel.AbsentValue:= '32767';
+       'u2'      : TffDataChannel.AbsentValue:= '65535';
+       'u4'      : TffDataChannel.AbsentValue:= '4294967295';
+       'i4'      : TffDataChannel.AbsentValue:= '2147483647';
+    end;
+    TffDataChannel.Offset:= CurrentOffset;
+    case LowerCase(RepCode) of
+       'f8'            : Inc(CurrentOffset, 8);
+       'f4', 'u4', 'i4': Inc(CurrentOffset, 4);
+       'i2', 'u2'      : Inc(CurrentOffset, 2);
+       'i1', 'u1'      : Inc(CurrentOffset, 1);
     end;
     DataChannelSize:= DataChannelSize + StrToInt(Copy(RepCode, 2, 1));
     Result:= TffDataChannel;
@@ -119,7 +128,6 @@ constructor TTffStructure.Init;
   constructor TTffFrames.Init();
   begin
      NumberOfRecords:= 0;
-     DataOffset:= 0;
      SetLength(FrameRecords, 0);
   end;
 
@@ -133,52 +141,44 @@ constructor TTffStructure.Init;
     Result:= FrameRecords[NumberOfRecords - 1];
   end;
 
-  procedure TTffFrames.AddData(Data: ShortInt);
+  procedure TTffFrames.AddData(Index: Word; Data: ShortInt);
   begin
-     Move(Data, FrameRecords[NumberOfRecords - 1].Data[DataOffset], 1);
-     Inc(DataOffset);
+     Move(Data, FrameRecords[NumberOfRecords - 1].Data[Index], 1);
   end;
 
-  procedure TTffFrames.AddData(Data: Byte);
+  procedure TTffFrames.AddData(Index: Word; Data: Byte);
   begin
-     Move(Data, FrameRecords[NumberOfRecords - 1].Data[DataOffset], 1);
-     Inc(DataOffset);
+     Move(Data, FrameRecords[NumberOfRecords - 1].Data[Index], 1);
   end;
 
-  procedure TTffFrames.AddData(Data: SmallInt);
+  procedure TTffFrames.AddData(Index: Word; Data: SmallInt);
   begin
-     Move(Data, FrameRecords[NumberOfRecords - 1].Data[DataOffset], 2);
-     Inc(DataOffset, 2);
+     Move(Data, FrameRecords[NumberOfRecords - 1].Data[Index], 2);
   end;
 
-  procedure TTffFrames.AddData(Data: Word);
+  procedure TTffFrames.AddData(Index: Word; Data: Word);
   begin
-     Move(Data, FrameRecords[NumberOfRecords - 1].Data[DataOffset], 2);
-     Inc(DataOffset, 2);
+     Move(Data, FrameRecords[NumberOfRecords - 1].Data[Index], 2);
   end;
 
-  procedure TTffFrames.AddData(Data: LongInt);
+  procedure TTffFrames.AddData(Index: Word; Data: LongInt);
   begin
-     Move(Data, FrameRecords[NumberOfRecords - 1].Data[DataOffset], 4);
-     Inc(DataOffset, 4);
+     Move(Data, FrameRecords[NumberOfRecords - 1].Data[Index], 4);
   end;
 
-  procedure TTffFrames.AddData(Data: LongWord);
+  procedure TTffFrames.AddData(Index: Word; Data: LongWord);
   begin
-     Move(Data, FrameRecords[NumberOfRecords - 1].Data[DataOffset], 4);
-     Inc(DataOffset, 4);
+     Move(Data, FrameRecords[NumberOfRecords - 1].Data[Index], 4);
   end;
 
-  procedure TTffFrames.AddData(Data: Single);
+  procedure TTffFrames.AddData(Index: Word; Data: Single);
   begin
-     Move(Data, FrameRecords[NumberOfRecords - 1].Data[DataOffset], 4);
-     Inc(DataOffset, 4);
+     Move(Data, FrameRecords[NumberOfRecords - 1].Data[Index], 4);
   end;
 
-  procedure TTffFrames.AddData(Data: Double);
+  procedure TTffFrames.AddData(Index: Word; Data: Double);
   begin
-     Move(Data, FrameRecords[NumberOfRecords - 1].Data[DataOffset], 8);
-     Inc(DataOffset, 8);
+     Move(Data, FrameRecords[NumberOfRecords - 1].Data[Index], 8);
   end;
 
   procedure TTffFrames.AddRecord(DateTime: TDateTime; Size: Word; TFFDataChannels: TTFFDataChannels);
@@ -189,19 +189,23 @@ constructor TTffStructure.Init;
     SetLength(FrameRecord.Data, Size);
     Insert(FrameRecord, FrameRecords, NumberOfRecords + 1);
     Inc(NumberOfRecords);
-    DataOffset:= 0;
     NumOfChannels:= Length(TFFDataChannels);
     for i:=0 to NumOfChannels - 1 do begin
        case LowerCase(TFFDataChannels[i].RepCode) of
-          'i1': AddData(127);
-          'u1': AddData(255);
-          'i2': AddData(32767);
-          'u2': AddData(65535);
-          'u4': AddData(4294967295);
-          'i4': AddData(2147483647);
-          'f4', 'f8': AddData(-999.25);
+          'i1': AddData(TFFDataChannels[i].Offset, 127);
+          'u1': AddData(TFFDataChannels[i].Offset, 255);
+          'i2': AddData(TFFDataChannels[i].Offset, 32767);
+          'u2': AddData(TFFDataChannels[i].Offset, 65535);
+          'u4': AddData(TFFDataChannels[i].Offset, 4294967295);
+          'i4': AddData(TFFDataChannels[i].Offset, 2147483647);
+          'f4', 'f8': AddData(TFFDataChannels[i].Offset, -999.25);
        end;
     end;
+  end;
+
+  function TTffFrames.GetRecordSize: Word;
+  begin
+    Result:= Length(FrameRecords[0].Data);
   end;
 
 end.
