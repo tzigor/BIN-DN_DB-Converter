@@ -6,52 +6,37 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, DateUtils,
-  Utils, UserTypes;
+  Utils, UserTypes, TffObjects;
 
   procedure TffDataChannelsSet(TFF_Ver: Byte);
-  function BinParser(): Byte;
+  function BinParser(): TFrameRecords;
 
 implementation
 uses Main;
 
 procedure TffDataChannelsSet(Tff_Ver: Byte);
 begin
-  TffVersion:= Tff_Ver;
   TffStructure.Init;
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('TIME', '100S', 'F4', '1', Tff_Ver));
+  TffStructure.AddChannel('TIME', '100S', 'F4', '1', Tff_Ver);
   // Cmd - 42
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('d_GX', 'g', 'F4', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('d_GY', 'g', 'F4', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('d_GZ', 'g', 'F4', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('d_HX', 'h', 'F4', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('d_HY', 'h', 'F4', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('d_HZ', 'h', 'F4', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('CRPM', 'rpm', 'U1', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Incl_Temp', 'C', 'I1', '1', Tff_Ver));
+  TffStructure.AddChannel('d_GX', 'g', 'F4', '1', Tff_Ver);
+  TffStructure.AddChannel('d_GY', 'g', 'F4', '1', Tff_Ver);
+  TffStructure.AddChannel('d_GZ', 'g', 'F4', '1', Tff_Ver);
+  TffStructure.AddChannel('d_HX', 'h', 'F4', '1', Tff_Ver);
+  TffStructure.AddChannel('d_HY', 'h', 'F4', '1', Tff_Ver);
+  TffStructure.AddChannel('d_HZ', 'h', 'F4', '1', Tff_Ver);
+  TffStructure.AddChannel('CRPM', 'rpm', 'U1', '1', Tff_Ver);
+  TffStructure.AddChannel('Incl_Temp', 'C', 'I1', '1', Tff_Ver);
   // Cmd - 41
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('TRPM', 'rpm', 'U2', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Shock_X', 'g', 'U1', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Shock_Y', 'g', 'U1', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Shock_Z', 'g', 'U1', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Vib_X', 'g', 'F4', '1', Tff_Ver));
-  TffStructure.AddChannel(TffStructure.TffDataChannelComposer('Vib_Lat', 'g', 'F4', '1', Tff_Ver));
+  TffStructure.AddChannel('TRPM', 'rpm', 'U2', '1', Tff_Ver);
+  TffStructure.AddChannel('Shock_X', 'g', 'U1', '1', Tff_Ver);
+  TffStructure.AddChannel('Shock_Y', 'g', 'U1', '1', Tff_Ver);
+  TffStructure.AddChannel('Shock_Z', 'g', 'U1', '1', Tff_Ver);
+  TffStructure.AddChannel('Vib_X', 'g', 'F4', '1', Tff_Ver);
+  TffStructure.AddChannel('Vib_Lat', 'g', 'F4', '1', Tff_Ver);
 end;
 
-procedure CreateParameters();
-begin
-  if Parameters is TStringList then FreeAndNil(Parameters);
-  Parameters:= TStringList.Create;
-  if TffVersion = TFF_V20 then Parameters.Add('FFV=V2.0')
-  else if TffVersion = TFF_V30 then Parameters.Add('FFV=V3.0')
-       else if TffVersion = TFF_V40 then Parameters.Add('FFV=V4.0');
-  Parameters.Add('MRL=' + IntToStr(TffFrames.GetRecordSize));
-  Parameters.Add('Acquisition Start Date=' + FormatDateTime('DD-MMM-YYYY',FirstDateTime));
-  Parameters.Add('Acquisition Start Time=' + FormatDateTime('hh:nn:ss',FirstDateTime));
-  Parameters.Add('TYPE=TFF');
-  Parameters.Add('Tool type=SIB');
-end;
-
-function BinParser(): Byte;
+function BinParser(): TFrameRecords;
 var
   s             : String;
   i             : Integer;
@@ -60,6 +45,7 @@ var
   ui            : UInt64;
   i64           : Int64;
 
+  TffFrames     : TTffFrames;
   CurrentRecord : TCurrentRecord;
   b             : Byte;
   DateTime,
@@ -78,9 +64,9 @@ var
   Day           : Word;
 
 begin
-  TFFDataChannelsSet(TFF_V30);
   PrevDateTime:= 0;
   FirstValidRecord:= False;
+  TffFrames.Init;
   repeat
     b:= 0;
     while (b <> $C0) And (Not EndOfFile) do b:= GetCurrentByte;
@@ -95,11 +81,7 @@ begin
              FirstDateTime:= DateTime;
              FirstValidRecord:= True;
           end;
-          if PrevDateTime <> DateTime then begin
-             TffFrames.AddRecord(DateTime, TffStructure.GetDataChannelSize, TffStructure.GetTFFDataChannels);
-             F4:= 0;
-             TffFrames.AddData(TffStructure.GetTFFDataChannels[0].Offset, F4);
-          end;
+          if PrevDateTime <> DateTime then TffFrames.AddRecord(DateTime, TffStructure.GetDataChannelSize, TffStructure.GetTFFDataChannels);
           PrevDateTime:= DateTime;
           case CurrentRecord.Cmd of
             01: {$REGION ' запись при выключении питания '}
@@ -1894,19 +1876,14 @@ begin
 
                         end;
                         {$ENDREGION}
-
                   end;
                 end;
                 {$ENDREGION}
-
-          end;
+          end;  // case
         end;
       end;
-   //SaveByteArray(TffFrames.GetCurrentFrameRecord.Data, 'TffFrames.bin');
   until EndOfFile;
-  if FirstValidRecord then CreateParameters
-  else ShowMessage('No Valid Date/Time');
-  //Parameters.SaveToFile('Parameters.txt');
+  Result:= TffFrames.GetFrameRecords;
 end;
 
 end.

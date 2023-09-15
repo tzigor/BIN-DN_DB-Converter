@@ -15,6 +15,7 @@ type
 
   TApp = class(TForm)
     Button1: TButton;
+    Test: TButton;
     ConvertToTxt: TButton;
     LoagConfig: TButton;
     Memo: TMemo;
@@ -29,6 +30,7 @@ type
     procedure ConvertToTxtClick(Sender: TObject);
     procedure LoagConfigClick(Sender: TObject);
     procedure OpenBinClick(Sender: TObject);
+    procedure TestClick(Sender: TObject);
   private
 
   public
@@ -48,12 +50,11 @@ var
   RecordOffset       : Word;
   CurrentParameter   : TCurrentParameter;
   TffStructure       : TTffStructure;
-  TffFrames          : TTffFrames;
+  FrameRecords       : TFrameRecords;
   Parameters         : TStringList;
-  TffVersion         : Byte;
   FirstValidRecord   : Boolean;
   FirstDateTime      : TDateTime;
-  BinDbConverter    : TBinDbConverter;
+  BinDbConverter     : TBinDbConverter;
 
   function LoadBinFile(): Boolean;
   function GetCurrentByte(): Byte;
@@ -454,6 +455,16 @@ begin
   PraseBin;
 end;
 
+procedure TApp.TestClick(Sender: TObject);
+var Date1, Date2: TDateTime;
+begin
+  Date1:= EncodeDateTime(2023, 8, 4, 0, 0, 0, 0);
+  Date2:= EncodeDateTime(2023, 8, 4, 0, 5, 0, 0);
+  ShowMessage(FormatFloat('#0.000', SecondsBetween(Date1, Date2) / 100));
+  if CompareDateTime(Date1, Date2) < 0 then ShowMessage('Good time')
+  else ShowMessage('Bad time');
+end;
+
 procedure TApp.CloseAppClick(Sender: TObject);
 begin
   App.Close
@@ -466,16 +477,21 @@ begin
 end;
 
 procedure TApp.Button1Click(Sender: TObject);
-var i, b: Byte;
-    i1: ShortInt;
-    wStr: String;
-    Data: TBytes;
-    F: Word;
 begin
   if LoadBinFile then begin
-     BinParser;
-     BinDbConverter.Init;
-     BinDbConverter.ParametersComposer(Parameters);
+     TFFDataChannelsSet(TFF_V30);
+     FrameRecords:= BinParser;
+     BinDbConverter.Init(TFF_V30, FirstDateTime);
+
+     BinDbConverter.CreateParameters(Length(FrameRecords[0].Data));
+     BinDbConverter.AddParameter('TYPE=TFF');
+     BinDbConverter.AddParameter('Tool type=SIB');
+
+     BinDbConverter.ChannelsComposer(TffStructure.GetTFFDataChannels);
+
+     BinDbConverter.FramesComposer(FrameRecords);
+
+     SaveByteArray(BinDbConverter.GetBinDbData, 'test.bin_db');
      //ShowMessage(IntToStr(Data[0]));
   end;
 end;

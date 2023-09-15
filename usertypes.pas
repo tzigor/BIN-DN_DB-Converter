@@ -18,6 +18,7 @@ Const
   TFF_V20 = 2;
   TFF_V30 = 3;
   TFF_V40 = 4;
+  DATA_MAX_SIZE = 4294967295;
 
 type
   String32 = String[32];
@@ -83,12 +84,15 @@ type
     Data: array of TConfigData;
   end;
 
+ TDataConfiguration = array of TConfig;
+
   TFrameRecord = record
     DateTime: TDateTime;
     Data: TBytes;
   end;
 
-  TDataConfiguration = array of TConfig;
+  TFrameRecords = array of TFrameRecord;
+
 
 implementation
 

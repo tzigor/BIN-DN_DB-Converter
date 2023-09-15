@@ -73,6 +73,15 @@ object App: TApp
         OnClick = ConvertToTxtClick
         TabOrder = 5
       end
+      object Test: TButton
+        Left = 616
+        Height = 25
+        Top = 8
+        Width = 75
+        Caption = 'Test'
+        OnClick = TestClick
+        TabOrder = 6
+      end
     end
   end
   object OpenDialog: TOpenDialog

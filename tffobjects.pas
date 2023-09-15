@@ -21,19 +21,19 @@ type
      function GetDataChannelSize: Word;
      function GetNumberOfChannels: Word;
      function GetTFFDataChannels: TTFFDataChannels;
-     function TFFDataChannelComposer(DLIS, Units, RepCode, Samples: String; TFFVersion: Byte): TTFFDataChannel;
-     procedure AddChannel(TFFDataChannel: TTFFDataChannel);
+     procedure AddChannel(DLIS, Units, RepCode, Samples: String; TffVersion: Byte);
      function GetChannel(Index: Word): TTFFDataChannel;
   end;
 
   TTffFrames = object
   private
-     FrameRecords: array of TFrameRecord;
+     FrameRecords: TFrameRecords;
      NumberOfRecords: longWord;
   public
      constructor Init;
      destructor Done;
      function GetCurrentFrameRecord: TFrameRecord;
+     function GetFrameRecords: TFrameRecords;
      procedure AddRecord(DateTime: TDateTime; Size: Word; TFFDataChannels: TTFFDataChannels);
      procedure AddData(Index: Word; Data: ShortInt);
      procedure AddData(Index: Word; Data: Byte);
@@ -43,12 +43,11 @@ type
      procedure AddData(Index: Word; Data: LongWord);
      procedure AddData(Index: Word; Data: Single);
      procedure AddData(Index: Word; Data: Double);
-     function GetRecordSize: Word;
   end;
 
 implementation
 
-constructor TTffStructure.Init;
+  constructor TTffStructure.Init;
   begin
      DataChannelSize:= 0;
      NumberOfChannels:= 0;
@@ -76,19 +75,11 @@ constructor TTffStructure.Init;
      Result:= TFFDataChannels;
   end;
 
-  function TTffStructure.TffDataChannelComposer(DLIS, Units, RepCode, Samples: String; TffVersion: Byte): TTffDataChannel;
+  procedure TTffStructure.AddChannel(DLIS, Units, RepCode, Samples: String; TffVersion: Byte);
   var TffDataChannel: TTffDataChannel;
-      wStr: String;
   begin
-    wStr:= DLIS;
-    if TffVersion = Tff_V40 then SetLength(wStr, 16)
-    else SetLength(wStr, 10);
-    TffDataChannel.DLIS:= wStr;
-    wStr:= Samples;
-    if TffVersion = Tff_V20 then SetLength(wStr, 4)
-    else SetLength(wStr, 10);
-    TffDataChannel.Samples:= wStr;
-
+    TffDataChannel.DLIS:= DLIS;
+    TffDataChannel.Samples:= Samples;
     TffDataChannel.Units:= Units;
     TffDataChannel.RepCode:= RepCode;
     case LowerCase(RepCode) of
@@ -101,18 +92,14 @@ constructor TTffStructure.Init;
        'i4'      : TffDataChannel.AbsentValue:= '2147483647';
     end;
     TffDataChannel.Offset:= CurrentOffset;
-    case LowerCase(RepCode) of
-       'f8'            : Inc(CurrentOffset, 8);
-       'f4', 'u4', 'i4': Inc(CurrentOffset, 4);
-       'i2', 'u2'      : Inc(CurrentOffset, 2);
-       'i1', 'u1'      : Inc(CurrentOffset, 1);
-    end;
+    if Not (UpperCase(DLIS) = 'TIME') then
+       case LowerCase(RepCode) of
+         'f8'            : Inc(CurrentOffset, 8);
+         'f4', 'u4', 'i4': Inc(CurrentOffset, 4);
+         'i2', 'u2'      : Inc(CurrentOffset, 2);
+         'i1', 'u1'      : Inc(CurrentOffset, 1);
+       end;
     DataChannelSize:= DataChannelSize + StrToInt(Copy(RepCode, 2, 1));
-    Result:= TffDataChannel;
-  end;
-
-  procedure TTffStructure.AddChannel(TffDataChannel: TTffDataChannel);
-  begin
     Insert(TffDataChannel, TffDataChannels, NumberOfChannels + 1);
     Inc(NumberOfChannels);
   end;
@@ -139,6 +126,11 @@ constructor TTffStructure.Init;
   function TTffFrames.GetCurrentFrameRecord: TFrameRecord;
   begin
     Result:= FrameRecords[NumberOfRecords - 1];
+  end;
+
+  function TTffFrames.GetFrameRecords: TFrameRecords;
+  begin
+    Result:= FrameRecords;
   end;
 
   procedure TTffFrames.AddData(Index: Word; Data: ShortInt);
@@ -186,11 +178,11 @@ constructor TTffStructure.Init;
       NumOfChannels, i: Word;
   begin
     FrameRecord.DateTime:= DateTime;
-    SetLength(FrameRecord.Data, Size);
+    SetLength(FrameRecord.Data, Size - 4); // minus 4 bytes for TIME
     Insert(FrameRecord, FrameRecords, NumberOfRecords + 1);
     Inc(NumberOfRecords);
     NumOfChannels:= Length(TFFDataChannels);
-    for i:=0 to NumOfChannels - 1 do begin
+    for i:=1 to NumOfChannels - 1 do begin
        case LowerCase(TFFDataChannels[i].RepCode) of
           'i1': AddData(TFFDataChannels[i].Offset, 127);
           'u1': AddData(TFFDataChannels[i].Offset, 255);
@@ -203,10 +195,6 @@ constructor TTffStructure.Init;
     end;
   end;
 
-  function TTffFrames.GetRecordSize: Word;
-  begin
-    Result:= Length(FrameRecords[0].Data);
-  end;
 
 end.
 
