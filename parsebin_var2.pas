@@ -34,6 +34,7 @@ begin
   TffStructure.AddChannel('Shock_Z', 'g', 'U1', '1', Tff_Ver);
   TffStructure.AddChannel('Vib_X', 'g', 'F4', '1', Tff_Ver);
   TffStructure.AddChannel('Vib_Lat', 'g', 'F4', '1', Tff_Ver);
+  TffStructure.AddChannel('Time_50G', 's', 'I4', '1', Tff_Ver);
 end;
 
 function BinParser(): TFrameRecords;
@@ -62,12 +63,14 @@ var
   Year,
   Month,
   Day           : Word;
+  DataExist     : Boolean;
 
 begin
   PrevDateTime:= 0;
   FirstValidRecord:= False;
   TffFrames.Init;
   repeat
+    DataExist:= True;
     b:= 0;
     while (b <> $C0) And (Not EndOfFile) do b:= GetCurrentByte;
 
@@ -81,7 +84,7 @@ begin
              FirstDateTime:= DateTime;
              FirstValidRecord:= True;
           end;
-          if PrevDateTime <> DateTime then TffFrames.AddRecord(DateTime, TffStructure.GetDataChannelSize, TffStructure.GetTFFDataChannels);
+          if (PrevDateTime <> DateTime) And ((CurrentRecord.Cmd = 41) or (CurrentRecord.Cmd = 42)) then TffFrames.AddRecord(DateTime, TffStructure.GetDataChannelSize, TffStructure.GetTFFDataChannels);
           PrevDateTime:= DateTime;
           case CurrentRecord.Cmd of
             01: {$REGION ' запись при выключении питания '}
@@ -1592,8 +1595,8 @@ begin
                           TffFrames.AddData(TffStructure.GetTFFDataChannels[9].Offset, U2);
 
                           {Buf[32]..Buf[35]: время длит.  сред. удара превышающего  50G (мкс). }
-                          Move(CurrentRecord.Data[32], i, 4);
-                          s:= #09#09#09#09 + IntToStr(i*25) + #09+ 'время длит.  сред. удара превышающего 50G (мкс)';
+                          Move(CurrentRecord.Data[32], I4, 4);
+                          TffFrames.AddData(TffStructure.GetTFFDataChannels[15].Offset, I4);
 
                           {Buf[36]: максимум по оси Х. }
                           U1:= CurrentRecord.Data[37];         //поменяли местами ХУ т.к. перепутали на плате 14.04.20 Коновалов
@@ -1860,7 +1863,6 @@ begin
                            {Buf[22]: время удара >50G }
                           Move(CurrentRecord.Data[22], i, 4);
                           s:= #09#09#09#09 + IntToStr(i*100) + ' мкс'#09+ 'время удара >50G';
-
 
                           {Buf[26]: максимум по оси Х. }
                           U1:= CurrentRecord.Data[27];         //поменяли местами ХУ т.к. перепутали на плате 14.04.20 Коновалов

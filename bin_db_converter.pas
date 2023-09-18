@@ -14,7 +14,8 @@ type
      TFFVersion    : Byte;
      BinDbData     : TBytes;
      DataOffset    : longWord;
-     FirstDateTime : TDateTime;
+     FirstDateTime : TDateTime; // Acquisition Start Date/Time
+     TimeShift     : Single;
   public
      constructor Init(Version: Byte; FDateTime: TDateTime);
      destructor Done;
@@ -34,6 +35,7 @@ begin
   DataOffset:= 0;
   TFFVersion:= Version;
   FirstDateTime:= FDateTime;
+  TimeShift:= SecondsBetween(FirstDateTime, DateOf(FirstDateTime)) / 100;
 end;
 
 destructor TBinDbConverter.Done;
@@ -145,7 +147,7 @@ begin
      FrameLen:= Length(FrameRecords[i].Data);
      AddLength(FrameLen + 4 + 1); // 4 bytes for time + 'F'
      Insert(Ord('F'), BinDbData, DATA_MAX_SIZE);
-     F4:= (SecondsBetween(FirstDateTime, FrameRecords[i].DateTime) / 100) + 782.35;
+     F4:= (SecondsBetween(FirstDateTime, FrameRecords[i].DateTime) / 100) + TimeShift;
      Move(F4, F4Array, 4);
      for j:=0 to 3 do Insert(F4Array[j], BinDbData, DATA_MAX_SIZE);
      for j:=0 to FrameLen - 1 do Insert(FrameRecords[i].Data[j], BinDbData, DATA_MAX_SIZE);

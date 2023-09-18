@@ -484,7 +484,7 @@ begin
      BinDbConverter.Init(TFF_V30, FirstDateTime);
 
      BinDbConverter.CreateParameters(Length(FrameRecords[0].Data));
-     BinDbConverter.AddParameter('TYPE=TFF');
+     BinDbConverter.AddParameter('PFORMAT=PC');
      BinDbConverter.AddParameter('Tool type=SIB');
 
      BinDbConverter.ChannelsComposer(TffStructure.GetTFFDataChannels);
